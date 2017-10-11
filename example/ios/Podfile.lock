@@ -1,0 +1,34 @@
+PODS:
+  - Flutter (1.0.0)
+  - Wilddog/Public (2.3.11):
+    - WilddogCore (~> 2.0.11)
+  - Wilddog/Sync (2.3.11):
+    - Wilddog/Public
+    - WilddogSync (~> 2.3.11)
+  - wilddog_sync (0.0.1):
+    - Flutter
+    - Wilddog/Sync
+  - WilddogCore (2.0.11)
+  - WilddogSync (2.3.11):
+    - WilddogCore (~> 2.0.11)
+
+DEPENDENCIES:
+  - Flutter (from `/Users/hekaiyou/flutter/bin/cache/artifacts/engine/ios`)
+  - wilddog_sync (from `/Users/hekaiyou/Documents/GitHub/wilddog_sync/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: /Users/hekaiyou/flutter/bin/cache/artifacts/engine/ios
+  wilddog_sync:
+    :path: /Users/hekaiyou/Documents/GitHub/wilddog_sync/ios
+
+SPEC CHECKSUMS:
+  Flutter: d674e78c937094a75ac71dd77e921e840bea3dbf
+  Wilddog: 03b942bfb47929f5bc41d1988157abfb843fb42d
+  wilddog_sync: cbb017972f5d602cb5f317d629f2b42ede3fbe38
+  WilddogCore: 515371b98a3298ced567033df3348f9f0e3b2dc0
+  WilddogSync: fb3dc0c95440d8be8f382100d1677b56c72f1b69
+
+PODFILE CHECKSUM: 351e02e34b831289961ec3558a535cbd2c4965d2
+
+COCOAPODS: 1.3.1

@@ -1,0 +1,14 @@
+name: wilddog_sync
+description: A new flutter plugin project.
+version: 0.0.1
+author:
+homepage:
+
+flutter:
+  plugin:
+    androidPackage: com.hekaiyou.wilddogsync
+    pluginClass: WilddogSyncPlugin
+
+dependencies:
+  flutter:
+    sdk: flutter
