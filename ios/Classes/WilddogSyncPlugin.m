@@ -8,20 +8,22 @@
 @implementation NSError (FlutterError)
 - (FlutterError *)flutterError {
   return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", self.code]
-          message:self.domain
-          details:self.localizedDescription];
+    message:self.domain
+    details:self.localizedDescription];
 }
 @end
 
 WDGSyncReference *getReference(NSDictionary *arguments) {
   NSString *path = arguments[@"path"];
-  //获取一个指向根节点的WDGSyncReference实例
-  WDGSyncReference *ref = [[WDGSync sync] reference];
+  //返回根路径的WDGSyncReference实例
+  WDGSyncReference *ref = [WDGSync sync].reference;
+  //获取当前节点指定路径节点的WDGSyncReference实例
   if ([path length] > 0) ref = [ref child:path];
   return ref;
 }
 
 WDGSyncQuery *getQuery(NSDictionary *arguments) {
+  //WDGSyncQuery：查询指定位置和指定条件下的数据
   WDGSyncQuery *query = getReference(arguments);
   NSDictionary *parameters = arguments[@"parameters"];
   NSString *orderBy = parameters[@"orderBy"];
@@ -84,6 +86,7 @@ WDGDataEventType parseEventType(NSString *eventTypeString) {
 }
 
 id roundDoubles(id value) {
+  //当存储int时，Wilddog iOS SDK有时会返回双精度，我们检测到可以转换为int的双精度，而不会损失精度并进行转换。
   if ([value isKindOfClass:[NSNumber class]]) {
     CFNumberType type = CFNumberGetType((CFNumberRef)value);
     if (type == kCFNumberDoubleType || type == kCFNumberFloatType) {
@@ -107,16 +110,26 @@ id roundDoubles(id value) {
   return value;
 }
 
-@interface WilddogSyncPlugin()
+@interface WilddogSyncPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @end
 
 @implementation WilddogSyncPlugin
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
+  //读取配置文件wilddog-Info.plist
+  NSString *path=[[NSBundle mainBundle]pathForResource:@"wilddog-Info" ofType:@"plist"];
+  NSDictionary *arr = [NSDictionary dictionaryWithContentsOfFile:path];
+  NSString *appid = [NSString stringWithFormat:@"https://%@.wilddogio.com/",arr[@"appid"]];
+  //初始化WDGApp
+  WDGOptions *option = [[WDGOptions alloc] initWithSyncURL:appid];
+  [WDGApp configureWithOptions:option];
+  //建立Flutter通道
   FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"wilddog_sync"
-            binaryMessenger:[registrar messenger]];
+                                  methodChannelWithName:@"wilddog_sync"
+                                  binaryMessenger:[registrar messenger]];
   WilddogSyncPlugin* instance = [[WilddogSyncPlugin alloc] init];
+  [registrar addMethodCallDelegate:instance channel:channel];
   instance.channel = channel;
   [registrar addMethodCallDelegate:instance channel:channel];
 }
@@ -142,22 +155,24 @@ id roundDoubles(id value) {
   } else if ([@"WilddogSync#goOffline" isEqualToString:call.method]) {
     [[WDGSync sync] goOffline];
     result(nil);
-  } else if ([@"WilddogSync#setPersistenceEnabled" isEqualToString:call.method]) {
+  } else if ([@"SyncReference#setPersistenceEnabled" isEqualToString:call.method]) {
     NSNumber *value = call.arguments;
     @try {
       [WDGSync sync].persistenceEnabled = value.boolValue;
       result([NSNumber numberWithBool:YES]);
     } @catch (NSException *exception) {
       if ([@"WDGSyncAlreadyInUse" isEqualToString:exception.name]) {
-        //数据库已经在使用，例如热重启或重启后
+        //当数据库已经在使用，比如在热重启或重启后
         result([NSNumber numberWithBool:NO]);
       } else {
         @throw;
       }
     }
   } else if ([@"SyncReference#set" isEqualToString:call.method]) {
+    //setValue：在WDGSyncReference当前路径写入一个值，这会覆盖当前路径和子路径的所有数据
+    //andPriority：写入数据的同时为当前节点设置优先值,优先值被用来排序。优先值只能是NSNumber和NSString类型，默认值为nil
     [getReference(call.arguments) setValue:call.arguments[@"value"]
-                                  andPriority:call.arguments[@"priority"]
+                                  andPriority: call.arguments[@"priority"]
                                   withCompletionBlock:defaultCompletionBlock];
   } else if ([@"SyncReference#update" isEqualToString:call.method]) {
     [getReference(call.arguments) updateChildValues:call.arguments[@"value"]
@@ -166,20 +181,20 @@ id roundDoubles(id value) {
     [getReference(call.arguments) setPriority:call.arguments[@"priority"]
                                   withCompletionBlock:defaultCompletionBlock];
   } else if ([@"Query#observe" isEqualToString:call.method]) {
+    //andPreviousSiblingKeyWithBlock：监听指定节点的数据，这是从WilddogSync云端监听数据的主要方式。
+    //当监听到当前节点的初始数据或当前节点的数据发生改变时，将会触发指定事件对应的回调block。
     WDGDataEventType eventType = parseEventType(call.arguments[@"eventType"]);
-    __block WDGSyncHandle handle = [getQuery(call.arguments)
-      observeEventType:eventType
+    __block WDGSyncHandle handle = [getQuery(call.arguments) observeEventType:eventType
       andPreviousSiblingKeyWithBlock:^(WDGDataSnapshot *snapshot, NSString *previousSiblingKey) {
-        [self.channel invokeMethod:@"Event"
-          arguments:@{
-            @"handle" : [NSNumber numberWithUnsignedInteger:handle],
-            @"snapshot" : @{
+        [self.channel invokeMethod:@"Event" arguments:@{
+          @"handle" : [NSNumber numberWithUnsignedInteger:handle],
+          @"snapshot" : @{
             @"key" : snapshot.key ?: [NSNull null],
             @"value" : roundDoubles(snapshot.value) ?: [NSNull null],
           },
-        @"previousSiblingKey" : previousSiblingKey ?: [NSNull null],
+          @"previousSiblingKey" : previousSiblingKey ?: [NSNull null],
+        }];
       }];
-    }];
     result([NSNumber numberWithUnsignedInteger:handle]);
   } else if ([@"Query#removeObserver" isEqualToString:call.method]) {
     WDGSyncHandle handle = [call.arguments[@"handle"] unsignedIntegerValue];
@@ -187,6 +202,7 @@ id roundDoubles(id value) {
     result(nil);
   } else if ([@"Query#keepSynced" isEqualToString:call.method]) {
     NSNumber *value = call.arguments[@"value"];
+    //通过在一个节点处通过调用keepSynced:YES方法，即使该节点处没有进行过监听，此节点的数据也将自动下载存储并与云端保持同步
     [getQuery(call.arguments) keepSynced:value.boolValue];
     result(nil);
   } else {

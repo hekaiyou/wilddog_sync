@@ -1,11 +1,13 @@
+library wilddog_sync;
+
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 
-class WilddogSync {
-  static const MethodChannel _channel =
-      const MethodChannel('wilddog_sync');
+import 'src/utils/push_id_generator.dart';
 
-  static Future<String> get platformVersion =>
-      _channel.invokeMethod('getPlatformVersion');
-}
+part 'src/wilddog_sync.dart';
+part 'src/event.dart';
+part 'src/sync_reference.dart';
+part 'src/query.dart';
