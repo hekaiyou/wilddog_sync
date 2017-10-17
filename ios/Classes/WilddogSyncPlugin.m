@@ -117,13 +117,6 @@ id roundDoubles(id value) {
 @implementation WilddogSyncPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  //读取配置文件wilddog-Info.plist
-  NSString *path=[[NSBundle mainBundle]pathForResource:@"wilddog-Info" ofType:@"plist"];
-  NSDictionary *arr = [NSDictionary dictionaryWithContentsOfFile:path];
-  NSString *appid = [NSString stringWithFormat:@"https://%@.wilddogio.com/",arr[@"appid"]];
-  //初始化WDGApp
-  WDGOptions *option = [[WDGOptions alloc] initWithSyncURL:appid];
-  [WDGApp configureWithOptions:option];
   //建立Flutter通道
   FlutterMethodChannel* channel = [FlutterMethodChannel
                                   methodChannelWithName:@"wilddog_sync"

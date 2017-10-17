@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'package:meta/meta.dart';
-
 import '../wilddog_sync.dart' show DataSnapshot, Event, Query;
 import 'wilddog_list.dart' show ChildCallback, ValueCallback;
 import 'utils/stream_subscriber_mixin.dart';
@@ -9,8 +7,8 @@ import 'utils/stream_subscriber_mixin.dart';
 class WilddogSortedList extends ListBase<DataSnapshot>
     with StreamSubscriberMixin<Event> {
   WilddogSortedList({
-    @required this.query,
-    @required this.comparator,
+    this.query,
+    this.comparator,
     this.onChildAdded,
     this.onChildRemoved,
     this.onChildChanged,

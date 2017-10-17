@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 import '../wilddog_sync.dart';
 import 'wilddog_list.dart';
@@ -15,8 +14,8 @@ typedef Widget WilddogAnimatedListItemBuilder(
 class WilddogAnimatedList extends StatefulWidget {
   WilddogAnimatedList({
     Key key,
-    @required this.query,
-    @required this.itemBuilder,
+    this.query,
+    this.itemBuilder,
     this.sort,
     this.defaultChild,
     this.scrollDirection: Axis.vertical,

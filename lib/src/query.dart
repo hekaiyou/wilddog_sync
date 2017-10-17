@@ -2,8 +2,8 @@ part of wilddog_sync;
 
 class Query {
   Query._(
-      {@required WilddogSync database,
-        @required List<String> pathComponents,
+      {WilddogSync database,
+        List<String> pathComponents,
         Map<String, dynamic> parameters})
       : _database = database,
         _pathComponents = pathComponents,

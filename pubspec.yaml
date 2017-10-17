@@ -1,8 +1,8 @@
 name: wilddog_sync
-description: A new flutter plugin project.
+description: Wilddog Sync plugin for Flutter.
 version: 0.0.1
-author:
-homepage:
+author: Hekaiyou <hekaiyou@qq.com>
+homepage: https://github.com/ChinaFlutterPioneerTeam/wilddog_sync
 
 flutter:
   plugin:

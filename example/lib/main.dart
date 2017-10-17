@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Database Example',
+      title: '野狗实时通信引擎',
       home: new MyHomePage(),
     );
   }
@@ -33,8 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription<Event> _messagesSubscription;
   bool _anchorToBottom = false;
 
-  String _kTestKey = 'Hello';
-  String _kTestValue = 'world!';
+  String _kTestKey = 'Key值';
+  String _kTestValue = 'Value值-';
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     _messagesSubscription =
         _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
-          print('Child added: ${event.snapshot.value}');
+          print('子节点增加了: ${event.snapshot.value}');
         });
   }
 
@@ -74,15 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text('Flutter Database Example'),
+        title: const Text('野狗实时通信引擎'),
       ),
       body: new Column(
         children: <Widget>[
           new Flexible(
             child: new Center(
               child: new Text(
-                'Button tapped $_counter time${ _counter == 1 ? '' : 's' }.\n\n'
-                    'This includes all devices, ever.',
+                '按钮点击了 $_counter 次，\n\n'
+                    '统计包含了所有的设备。',
               ),
             ),
           ),
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               value: _anchorToBottom,
             ),
-            title: const Text('Anchor to bottom'),
+            title: const Text('锚点到底部'),
           ),
           new Flexible(
             child: new WilddogAnimatedList(
@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _increment,
-        tooltip: 'Increment',
+        tooltip: '增加',
         child: new Icon(Icons.add),
       ),
     );
