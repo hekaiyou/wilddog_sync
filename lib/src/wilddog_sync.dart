@@ -25,7 +25,7 @@ class WilddogSync {
 
   Future<bool> setPersistenceEnabled(bool enabled) {
     return _channel.invokeMethod(
-      'SyncReference#setPersistenceEnabled',
+      'WilddogSync#setPersistenceEnabled',
       enabled,
     );
   }

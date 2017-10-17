@@ -155,7 +155,7 @@ id roundDoubles(id value) {
   } else if ([@"WilddogSync#goOffline" isEqualToString:call.method]) {
     [[WDGSync sync] goOffline];
     result(nil);
-  } else if ([@"SyncReference#setPersistenceEnabled" isEqualToString:call.method]) {
+  } else if ([@"WilddogSync#setPersistenceEnabled" isEqualToString:call.method]) {
     NSNumber *value = call.arguments;
     @try {
       [WDGSync sync].persistenceEnabled = value.boolValue;

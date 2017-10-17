@@ -1,3 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.hekaiyou.wilddogsync">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <application>
+        <receiver android:name="com.wilddog.client.receiver.WilddogAuthCastReceiver">
+            <intent-filter>
+                <action android:name="com.wilddog.wilddogauth.signinsuccess"/>
+                <action android:name="com.wilddog.wilddogauth.signoutsuccess"/>
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>

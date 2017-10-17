@@ -39,4 +39,7 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    dependencies {
+        compile 'com.wilddog.client:wilddog-sync-android:2.3.7'
+    }
 }
