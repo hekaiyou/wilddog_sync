@@ -1,5 +1,6 @@
 part of wilddog_sync;
 
+/// 表示对特定位置的数据的查询。
 class Query {
   Query._(
       {WilddogSync database,
@@ -11,11 +12,15 @@ class Query {
             new Map<String, dynamic>.unmodifiable(<String, dynamic>{}),
         assert(database != null);
 
+  /*
+  _database存储当前WilddogSync的实例。
+  _pathComponents存储当前SyncReference路径的字符串列表。
+   */
   final WilddogSync _database;
   final List<String> _pathComponents;
   final Map<String, dynamic> _parameters;
 
-  // 斜杠分隔的路径，表示此查询的数据库位置。
+  /// 斜杠分隔的路径，表示此查询的数据库位置。
   String get path => _pathComponents.join('/');
 
   Query _copyWithParameters(Map<String, dynamic> parameters) {

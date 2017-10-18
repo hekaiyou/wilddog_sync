@@ -132,7 +132,7 @@ Sync的数据以JSON格式存储，它是键值对（Key-Value）的集合，其
 
 ### 写入数据
 
-使用`WilddogSync.instance.reference()`会获取一个指向根节点的`SyncReference`实例，`child`用来定位到某个子节点（），
+使用`WilddogSync.instance.reference()`会获取一个指向根节点的`SyncReference`实例，`child`方法用来定位到某个子节点，
 
 ```
 SyncReference _counterRef = WilddogSync.instance.reference().child('counter');

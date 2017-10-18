@@ -13,17 +13,18 @@
 }
 @end
 
+// 获取一个WDGSyncReference实例。
 WDGSyncReference *getReference(NSDictionary *arguments) {
   NSString *path = arguments[@"path"];
-  //返回根路径的WDGSyncReference实例
+  // 返回根路径的WDGSyncReference实例。
   WDGSyncReference *ref = [WDGSync sync].reference;
-  //获取当前节点指定路径节点的WDGSyncReference实例
+  // child用来定位到某个节点。
   if ([path length] > 0) ref = [ref child:path];
   return ref;
 }
 
 WDGSyncQuery *getQuery(NSDictionary *arguments) {
-  //WDGSyncQuery：查询指定位置和指定条件下的数据
+  // WDGSyncQuery：查询指定位置和指定条件下的数据。
   WDGSyncQuery *query = getReference(arguments);
   NSDictionary *parameters = arguments[@"parameters"];
   NSString *orderBy = parameters[@"orderBy"];
@@ -117,7 +118,6 @@ id roundDoubles(id value) {
 @implementation WilddogSyncPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  //建立Flutter通道
   FlutterMethodChannel* channel = [FlutterMethodChannel
                                   methodChannelWithName:@"wilddog_sync"
                                   binaryMessenger:[registrar messenger]];
@@ -162,8 +162,9 @@ id roundDoubles(id value) {
       }
     }
   } else if ([@"SyncReference#set" isEqualToString:call.method]) {
-    //setValue：在WDGSyncReference当前路径写入一个值，这会覆盖当前路径和子路径的所有数据
-    //andPriority：写入数据的同时为当前节点设置优先值,优先值被用来排序。优先值只能是NSNumber和NSString类型，默认值为nil
+    // setValue在WDGSyncReference当前路径写入一个值，这会覆盖当前路径和子路径的所有数据。
+    // andPriority在写入数据的同时为当前节点设置优先值，优先值被用来排序。
+    // 优先值只能是NSNumber和NSString类型，默认值为nil
     [getReference(call.arguments) setValue:call.arguments[@"value"]
                                   andPriority: call.arguments[@"priority"]
                                   withCompletionBlock:defaultCompletionBlock];

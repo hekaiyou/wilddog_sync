@@ -37,9 +37,16 @@ public class WilddogSyncPlugin implements MethodCallHandler {
     this.channel = channel;
   }
 
+  /**
+   * 获取一个SyncReference实例
+   * @param arguments 通道传递的参数Map
+   * @return SyncReference实例
+   */
   private SyncReference getReference(Map<String, Object> arguments) {
     String path = (String) arguments.get("path");
+    // 获取SyncReference实例
     SyncReference reference = WilddogSync.getInstance().getReference();
+    // child()用来定位到某个节点。
     if (path != null) reference = reference.child(path);
     return reference;
   }
@@ -120,6 +127,9 @@ public class WilddogSyncPlugin implements MethodCallHandler {
     return query;
   }
 
+  /**
+   * 默认的回调完成监听器
+   */
   private class DefaultCompletionListener implements SyncReference.CompletionListener {
     private final Result result;
 
@@ -222,9 +232,12 @@ public class WilddogSyncPlugin implements MethodCallHandler {
       {
         Map<String, Object> arguments = call.arguments();
         Object value = arguments.get("value");
+        // priority存储通道传递的节点优先级
         Object priority = arguments.get("priority");
         SyncReference reference = getReference(arguments);
         if (priority != null) {
+          // setValue()方法用于向指定节点写入数据。此方法会先清空指定节点，再写入数据。
+          // 该方法可设置回调方法来获取操作的结果。
           reference.setValue(value, priority, new DefaultCompletionListener(result));
         } else {
           reference.setValue(value, new DefaultCompletionListener(result));

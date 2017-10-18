@@ -1,5 +1,9 @@
 import 'dart:math';
 
+/// 生成Firebase子节点Key的实用程序类。
+///
+/// 由于Flutter插件API是异步的，所以我们无法使用本机SDK同步生成节点密钥，
+/// 如果我们希望能够同步引用新创建的节点，我们只能自己实现。
 class PushIdGenerator {
   static const String PUSH_CHARS =
       '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
