@@ -86,34 +86,34 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          new ListTile(
-            leading: new Checkbox(
-              onChanged: (bool value) {
-                setState(() {
-                  _anchorToBottom = value;
-                });
-              },
-              value: _anchorToBottom,
-            ),
-            title: const Text('锚点到底部'),
-          ),
-          new Flexible(
-            child: new WilddogAnimatedList(
-              key: new ValueKey<bool>(_anchorToBottom),
-              query: _messagesRef,
-              reverse: _anchorToBottom,
-              sort: _anchorToBottom
-                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
-                  : null,
-              itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                  Animation<double> animation, int index) {
-                return new SizeTransition(
-                  sizeFactor: animation,
-                  child: new Text("$index: ${snapshot.value.toString()}"),
-                );
-              },
-            ),
-          ),
+//          new ListTile(
+//            leading: new Checkbox(
+//              onChanged: (bool value) {
+//                setState(() {
+//                  _anchorToBottom = value;
+//                });
+//              },
+//              value: _anchorToBottom,
+//            ),
+//            title: const Text('锚点到底部'),
+//          ),
+//          new Flexible(
+//            child: new WilddogAnimatedList(
+//              key: new ValueKey<bool>(_anchorToBottom),
+//              query: _messagesRef,
+//              reverse: _anchorToBottom,
+//              sort: _anchorToBottom
+//                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
+//                  : null,
+//              itemBuilder: (BuildContext context, DataSnapshot snapshot,
+//                  Animation<double> animation, int index) {
+//                return new SizeTransition(
+//                  sizeFactor: animation,
+//                  child: new Text("$index: ${snapshot.value.toString()}"),
+//                );
+//              },
+//            ),
+//          ),
         ],
       ),
       floatingActionButton: new FloatingActionButton(

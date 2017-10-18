@@ -132,7 +132,11 @@ Sync的数据以JSON格式存储，它是键值对（Key-Value）的集合，其
 
 ### 写入数据
 
-使用`WilddogSync.instance.reference()`会获取一个指向根节点的`SyncReference`实例，`child`方法用来定位到某个子节点，
+使用`WilddogSync.instance.reference()`会获取一个指向根节点的`SyncReference`实例，`child`方法用来定位到某个子节点。
+
+使用`set`方法可以向指定节点写入数据，此方法会先清空指定节点，再写入数据。通过设置`priority`参数可以节点的优先级，默认值为`0`。
+
+如果子节点的`value`是列表时，可以使用`push`方法。`push`方法使用唯一`key`生成新的子节点并返回一个`SyncReference`实例，唯一`key`以客户端生成的时间戳为前缀，以便生成的列表将按时间顺序排序。
 
 ```
 SyncReference _counterRef = WilddogSync.instance.reference().child('counter');
@@ -144,3 +148,7 @@ _messagesRef.push().set(<String, String>{
   'userId': 'user1',
 });
 ```
+
+### 设置节点优先级
+
+~~~还没写完
