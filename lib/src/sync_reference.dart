@@ -3,9 +3,9 @@ part of wilddog_sync;
 /// SyncReference表示WilddogSync中的特定位置，可用于读取或写入数据到该位置。
 ///
 /// 这个类是所有WilddogSync操作的起点，
-/// 通过WilddogSync.reference()获得第一个SyncReference后，
-/// 可以使用它读取数据（即"onChildAdded"），写入数据（即"set"），
-/// 并创建新的SyncReference（即child"）。
+/// 通过`WilddogSync.reference()`获得第一个SyncReference后，
+/// 可以使用它读取数据（即`onChildAdded`），写入数据（即`set`），
+/// 并创建新的`SyncReference`（即`child`）。
 class SyncReference extends Query {
   SyncReference._(WilddogSync database, List<String> pathComponents)
       : super._(database: database, pathComponents: pathComponents);
@@ -52,7 +52,7 @@ class SyncReference extends Query {
   invokeMethod使用指定的参数调用此通道上的一个方法。
   自定义的priority参数可以设置节点的优先级，默认值为0。
    */
-  /// 将value写入具有指定的优先级的位置（如果适用）。
+  /// 将`value`写入具有指定`priority`的位置（如果适用）。
   ///
   /// 操作将覆盖此位置及其所有子位置的所有数据。
   ///
@@ -68,6 +68,7 @@ class SyncReference extends Query {
     );
   }
 
+  /// 用`value`更新节点。
   Future<Null> update(Map<String, dynamic> value) {
     return _database._channel.invokeMethod(
       'SyncReference#update',
@@ -75,6 +76,22 @@ class SyncReference extends Query {
     );
   }
 
+  /// 为此WilddogSync位置的数据设置优先级。
+  ///
+  /// 优先级可以为某个位置的子节点提供自定义排序，如果没有指定优先级，则按key排序子节点。
+  ///
+  /// 您不能在空的位置设置优先级，因此，当设置具有特定优先级的初始数据时应使用set()，
+  /// 并且在更新现有数据的优先级时应使用setPriority()。
+  ///
+  /// 使用以下规则，将根据此优先级对子节点进行排序：
+  ///
+  /// 没有优先权的子节点先来了，接下来有数字优先的子节点，它们按优先级排序从小到大排序。
+  /// 以字符串为优先的子节点来到最后，它们按照字典顺序排列。
+  /// 每当两个子节点具有相同的优先级时，它们按key排序。
+  /// 数字键首先按数字大小排序，其次剩余的key按字典排序。
+  ///
+  /// 请注意，优先级被解析为IEEE 754双精度浮点数排序。
+  /// key总是作为字符串存储，只有当它们可以被解析为32位整数时才被视为数字。
   Future<Null> setPriority(dynamic priority) async {
     return _database._channel.invokeMethod(
       'SyncReference#setPriority',
@@ -82,6 +99,11 @@ class SyncReference extends Query {
     );
   }
 
+  /// 在这个WilddogSync位置删除数据，所有子节点的数据也将被删除。
+  ///
+  /// 删除的效果将立即可见，相应的事件将被触发，对WilddogSync服务器的数据同步也将开始。
+  ///
+  /// remove()等效于调用set(null)。
   Future<Null> remove() => set(null);
 }
 

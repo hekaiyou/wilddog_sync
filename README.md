@@ -27,7 +27,7 @@ Wilddog生成了一个App ID的字符串，这是Wilddog项目唯一ID，用于�
 
 ### 将插件添加到应用程序
 
-将以下内容添加到的Flutter项目的`pubspec.yaml`文件中：
+将以下内容添加到的Flutter项目的`pubspec.yaml`文件中。
 
 ```
 dependencies:
@@ -36,7 +36,7 @@ dependencies:
 
 更新并保存此文件后，点击顶部的“Packages Get”，等待下载完成。打开`main.dart`文件，IntelliJ IDEA或其他编辑器可能会在上方显示一个提示，提醒我们重新加载`pubspec.yaml`文件，点击“Get dependencies”以检索其他软件包，并在Flutter项目中使用它们。
 
-开发iOS必须使用macOS，而在macOS中，想要在Flutter应用程序中使用Flutter插件，需要安装[homebrew](https://brew.sh/index_zh-cn.html)，并打开终端运行以下命令来安装CocoaPods：
+开发iOS必须使用macOS，而在macOS中，想要在Flutter应用程序中使用Flutter插件，需要安装[homebrew](https://brew.sh/index_zh-cn.html)，并打开终端运行以下命令来安装CocoaPods。
 
 ```
 brew install cocoapods
@@ -45,7 +45,7 @@ pod setup
 
 ### 为Android配置Wilddog
 
-启动Android Studio后选择项目的`android`文件夹，打开Flutter项目的Android部分，然后再打开`android/app/src/main/java/<项目名>`文件夹中的`MainActivity.java`文件，将Wilddog的初始化代码添加到文件中：
+启动Android Studio后选择项目的`android`文件夹，打开Flutter项目的Android部分，然后再打开“android/app/src/main/java/<项目名>”文件夹中的`MainActivity.java`文件，将Wilddog的初始化代码添加到文件中。
 
 ```
 //...
@@ -62,7 +62,7 @@ public class MainActivity extends FlutterActivity {
 }
 ```
 
-注意，如果应用程序编译时出现文件重复导致的编译错误时，可以选择在`android/app/build.gradle`中添加`packagingOptions`：
+注意，如果应用程序编译时出现文件重复导致的编译错误时，可以选择在`android/app/build.gradle`中添加“packagingOptions”。
 
 ```
 android {
@@ -98,7 +98,7 @@ android {
 
 ### 为iOS配置Wilddog
 
-在Flutter项目的`ios`目录下，使用Xcode打开`Runner.xcworkspace`文件。然后打开`ios/Runner`文件夹中的`AppDelegate.m`文件，将Wilddog的初始化代码添加到文件中：
+在Flutter项目的`ios`目录下，使用Xcode打开“Runner.xcworkspace”文件。然后打开“ios/Runner”文件夹中的`AppDelegate.m`文件，将Wilddog的初始化代码添加到文件中。
 
 ```
 //...
@@ -116,7 +116,7 @@ android {
 
 ## 使用与入门
 
-要使用Flutter的平台插件，必须在Dart代码中导入对应包，使用以下代码导入`wilddog_sync`包：
+要使用Flutter的平台插件，必须在Dart代码中导入对应包，使用以下代码导入`wilddog_sync`包。
 
 ```
 import 'package:wilddog_sync/wilddog_sync.dart';
@@ -124,7 +124,7 @@ import 'package:wilddog_sync/wilddog_sync.dart';
 
 ### 基础概念
 
-Sync的数据以JSON格式存储，它是键值对（Key-Value）的集合，其中每一个键值对（Key-Value）都称之为节点。一个节点包含`key`和`value` ，例如，以下聊天室示例的数据结构中，“name”是`key`，“username1”是“name”对应的`value`，它们共同组成一个节点。
+Sync的数据以JSON格式存储，它是键值对（Key-Value）的集合，其中每一个键值对（Key-Value）都称之为节点。一个节点包含`key`和`value` ，例如，以下聊天室示例的数据结构中，“name”是key，“username1”是“name”对应的value，它们共同组成一个节点。
 
 ![这里写图片描述](http://img.blog.csdn.net/20171017215902340?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaGVrYWl5b3U=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
@@ -132,11 +132,11 @@ Sync的数据以JSON格式存储，它是键值对（Key-Value）的集合，其
 
 ### 写入数据
 
-使用`WilddogSync.instance.reference()`会获取一个指向根节点的`SyncReference`实例，`child`方法用来定位到某个子节点。
+使用`WilddogSync.instance.reference()`会获取一个指向根节点的SyncReference实例，`child`方法用来定位到某个子节点。
 
-使用`set`方法可以向指定节点写入数据，此方法会先清空指定节点，再写入数据。通过设置`priority`参数可以节点的优先级，默认值为`0`。
+使用`set`方法可以向指定节点写入数据，此方法会先清空指定节点，再写入数据。通过设置`priority`参数可以节点的优先级，默认值为“0”。
 
-如果子节点的`value`是列表时，可以使用`push`方法。`push`方法使用唯一`key`生成新的子节点并返回一个`SyncReference`实例，唯一`key`以客户端生成的时间戳为前缀，以便生成的列表将按时间顺序排序。
+如果子节点的value是列表时，可以使用`push`方法。push方法使用唯一key生成新的子节点并返回一个SyncReference实例，唯一key以客户端生成的时间戳为前缀，以便生成的列表将按时间顺序排序。
 
 ```
 SyncReference _counterRef = WilddogSync.instance.reference().child('counter');
@@ -151,4 +151,29 @@ _messagesRef.push().set(<String, String>{
 
 ### 设置节点优先级
 
-~~~还没写完
+`setPriority()`方法用于设置节点的优先级，每个节点都能设置优先级，用于实现节点按优先级排序。优先级是节点的隐藏属性，默认为“0”。
+
+```
+_counterRef.setPriority(100);
+```
+
+### 更新数据
+
+`update`方法用于更新指定子节点。
+
+```
+_messagesRef.child('messagesID').update({
+  'content': 'message2Content',
+  'userId': 'user2',
+});
+```
+
+### 删除数据
+
+`remove`方法用于删除指定节点。
+
+```
+_counterRef.remove();
+```
+
+还没写完

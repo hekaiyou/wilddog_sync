@@ -250,6 +250,7 @@ public class WilddogSyncPlugin implements MethodCallHandler {
         Map<String, Object> arguments = call.arguments();
         Map value = (Map) arguments.get("value");
         SyncReference reference = getReference(arguments);
+        // updateChildren()方法用于更新指定子节点。
         reference.updateChildren(value, new DefaultCompletionListener(result));
         break;
       }
@@ -257,17 +258,16 @@ public class WilddogSyncPlugin implements MethodCallHandler {
       case "SyncReference#setPriority":
       {
         Map<String, Object> arguments = call.arguments();
+        // priority存储通道传递的节点优先级
         Object priority = arguments.get("priority");
         SyncReference reference = getReference(arguments);
+        // setPriority(priority)方法用于设置节点的优先级，优先级是节点的隐藏属性，默认为null。
         reference.setPriority(priority, new DefaultCompletionListener(result));
         break;
       }
 
       case "Query#keepSynced":
       {
-        //Map<String, Object> arguments = call.arguments();
-        //boolean value = (Boolean) arguments.get("value");
-        //getQuery(arguments).keepSynced(value);
         result.success(null);
         break;
       }

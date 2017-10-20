@@ -169,9 +169,11 @@ id roundDoubles(id value) {
                                   andPriority: call.arguments[@"priority"]
                                   withCompletionBlock:defaultCompletionBlock];
   } else if ([@"SyncReference#update" isEqualToString:call.method]) {
+    // updateChildValues方法用于更新指定子节点。
     [getReference(call.arguments) updateChildValues:call.arguments[@"value"]
                                   withCompletionBlock:defaultCompletionBlock];
   } else if ([@"SyncReference#setPriority" isEqualToString:call.method]) {
+    // setPriority:方法用于设置节点的优先级，优先级是节点的隐藏属性，默认为null。
     [getReference(call.arguments) setPriority:call.arguments[@"priority"]
                                   withCompletionBlock:defaultCompletionBlock];
   } else if ([@"Query#observe" isEqualToString:call.method]) {
