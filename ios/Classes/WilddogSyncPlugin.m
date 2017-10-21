@@ -70,6 +70,7 @@ WDGSyncQuery *getQuery(NSDictionary *arguments) {
   return query;
 }
 
+// 把Flutter事件类型解析为iOS平台事件类型
 WDGDataEventType parseEventType(NSString *eventTypeString) {
   if ([@"_EventType.childAdded" isEqual:eventTypeString]) {
     return WDGDataEventTypeChildAdded;
@@ -177,8 +178,8 @@ id roundDoubles(id value) {
     [getReference(call.arguments) setPriority:call.arguments[@"priority"]
                                   withCompletionBlock:defaultCompletionBlock];
   } else if ([@"Query#observe" isEqualToString:call.method]) {
-    //andPreviousSiblingKeyWithBlock：监听指定节点的数据，这是从WilddogSync云端监听数据的主要方式。
-    //当监听到当前节点的初始数据或当前节点的数据发生改变时，将会触发指定事件对应的回调block。
+    // andPreviousSiblingKeyWithBlock：监听指定节点的数据，这是从WilddogSync云端监听数据的主要方式。
+    // 当监听到当前节点的初始数据或当前节点的数据发生改变时，将会触发指定事件对应的回调block。
     WDGDataEventType eventType = parseEventType(call.arguments[@"eventType"]);
     __block WDGSyncHandle handle = [getQuery(call.arguments) observeEventType:eventType
       andPreviousSiblingKeyWithBlock:^(WDGDataSnapshot *snapshot, NSString *previousSiblingKey) {

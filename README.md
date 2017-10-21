@@ -149,7 +149,7 @@ _messagesRef.push().set(<String, String>{
 });
 ```
 
-### 设置节点优先级
+### 设置优先级
 
 `setPriority()`方法用于设置节点的优先级，每个节点都能设置优先级，用于实现节点按优先级排序。优先级是节点的隐藏属性，默认为“0”。
 
@@ -168,6 +168,26 @@ _messagesRef.child('messagesID').update({
 });
 ```
 
+### 获取数据
+
+使用`once()`方法可以获取当前节点的`DataSnapshot`实例，并通过DataSnapshot查看当前节点的key和value。由于获取数据是异步操作，因此需要导入相关的包并设置方法的返回值为Future类型。
+
+```
+// import 'dart:async';
+Future<Null> _chestnuts() async {
+  DataSnapshot snapshot = await _counterRef.once();
+  print('${onValue.key} : ${onValue.value}');
+}
+```
+
+或者使用Future的抽象方法`then`，注册一个在Future完成时调用的回调。
+
+```
+_counterRef.once().then((onValue){
+  print('${onValue.key} : ${onValue.value}');
+});
+```
+
 ### 删除数据
 
 `remove`方法用于删除指定节点。
@@ -176,4 +196,6 @@ _messagesRef.child('messagesID').update({
 _counterRef.remove();
 ```
 
-还没写完
+### 监听数据
+
+还没写完~~~

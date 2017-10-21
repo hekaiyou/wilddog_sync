@@ -1,5 +1,11 @@
 part of wilddog_sync;
 
+/*
+枚举类_EventType，定义事件类型。
+childAdded为子节点增加事件，childRemoved为子节点被移除事件，
+childChanged为子节点更改事件，childMoved为子节点移动事件，
+value为获取节点的值事件。
+ */
 enum _EventType {
   childAdded,
   childRemoved,

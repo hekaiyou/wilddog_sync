@@ -10,7 +10,7 @@ class WilddogSync {
   final MethodChannel _channel = const MethodChannel('wilddog_sync');
 
   /*
-  StreamController类是能控制流的控制器。
+  StreamController类是能控制`stream`的控制器。
   add方法会发送数据事件。
    */
   static final Map<int, StreamController<Event>> _observers =

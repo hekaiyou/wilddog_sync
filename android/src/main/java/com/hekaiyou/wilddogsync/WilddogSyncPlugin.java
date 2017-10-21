@@ -147,6 +147,9 @@ public class WilddogSyncPlugin implements MethodCallHandler {
     }
   }
 
+  /**
+   *
+   */
   private class EventObserver implements ChildEventListener, ValueEventListener {
     private String requestedEventType;
     private int handle;
@@ -268,6 +271,7 @@ public class WilddogSyncPlugin implements MethodCallHandler {
 
       case "Query#keepSynced":
       {
+        // WilddogSync的AndroidSDK暂不支持此设置
         result.success(null);
         break;
       }

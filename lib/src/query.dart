@@ -40,6 +40,38 @@ class Query {
       });
   }
 
+  /*
+  StreamController类是能控制`stream`的控制器。
+  构造函数`StreamController.broadcast`创建一个控制器，其中stream可以被多次监听。
+
+  `Stream`返回的stream是广播流，它可以监听多次。
+
+  一个stream应该是惰性的，直到用户开始监听（使用`onListen`回调开始生成事件）。
+  当没有用户在stream上监听时，stream不应该泄漏资源（例如websockets）。
+
+  当没有监听器时，广播流不缓冲事件。
+
+  当调用`add`、`addError`或`close`时，控制器会将任何事件分配给所有当前订阅的监听器。
+  在前一次调用返回之前，不允许调用add、addError或close。
+  控制器没有任何内部事件队列，如果在事件添加时没有监听器，它将被丢弃，
+  或者如果是错误，则报告为未被捕获。
+
+  每个监听器订阅是独立处理的，如果一个暂停，只有暂停监听器受到影响。
+  暂停的监听器将在内部缓冲事件，直到取消暂停或取消。
+
+  如果sync是true，则在add、addError或close调用期间，stream的订阅可能直接触发事件。
+  返回的stream控制器是`SynchronousStreamController`，须谨慎使用，不要中断stream合同。
+
+  如果sync为false，则在添加事件的代码完成后，事件将始终被触发。
+  在这种情况下，对于多个监听器获取事件的时间不作任何保证，
+  除了每个监听器将以正确的顺序获取所有事件。每个订阅单独处理事件。
+  如果两个事件在具有两个监听器的异步控制器上发送，
+  其中一个监听器可能会在另一个监听器获得任何事件之前获取这两个事件。
+  当事件被启动时（即调用`add`时）以及事件以后发送时，必须同时订阅一个监听器，以便接收事件。
+
+  当第一个监听器被订阅时，调用`onListen`回调，当不再有任何活动的监听器时调用`onCancel`。
+  如果稍后再添加一个监听器，在调用onCancel之后，再次调用onListen。
+   */
   Stream<Event> _observe(_EventType eventType) {
     Future<int> _handle;
     // 一旦所有订阅者取消，StreamController就会被当成垃圾收集，忽略分析仪的警告。
@@ -75,7 +107,7 @@ class Query {
     return controller.stream;
   }
 
-  // 侦听单个值事件，然后停止侦听。
+  /// 监听单个值事件，然后停止监听。
   Future<DataSnapshot> once() async => (await onValue.first).snapshot;
 
   // 子节点加入时触发。
@@ -90,7 +122,7 @@ class Query {
   // 子节点被改动时触发。
   Stream<Event> get onChildMoved => _observe(_EventType.childMoved);
 
-  // 当该节点的数据更新时触发，previousChildKey为null。
+  /// 当该节点的数据更新时触发，previousChildKey为null。
   Stream<Event> get onValue => _observe(_EventType.value);
 
   Query startAt(dynamic value, {String key}) {
