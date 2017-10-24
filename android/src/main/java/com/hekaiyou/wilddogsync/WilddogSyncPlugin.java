@@ -55,6 +55,7 @@ public class WilddogSyncPlugin implements MethodCallHandler {
     Query query = getReference(arguments);
     @SuppressWarnings("unchecked")
     Map<String, Object> parameters = (Map<String, Object>) arguments.get("parameters");
+    // parameters存储通道传递的参数
     if (parameters == null) return query;
     Object orderBy = parameters.get("orderBy");
     if ("child".equals(orderBy)) {

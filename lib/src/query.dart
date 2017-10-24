@@ -15,6 +15,7 @@ class Query {
   /*
   _database存储当前WilddogSync的实例。
   _pathComponents存储当前SyncReference路径的字符串列表。
+  _parameters存储当前查询的参数列表。
    */
   final WilddogSync _database;
   final List<String> _pathComponents;
@@ -23,6 +24,7 @@ class Query {
   /// 斜杠分隔的路径，表示此查询的数据库位置。
   String get path => _pathComponents.join('/');
 
+  /// 在当前Query实例的参数列表中添加新参数。
   Query _copyWithParameters(Map<String, dynamic> parameters) {
     return new Query._(
       database: _database,
@@ -125,6 +127,11 @@ class Query {
   /// 当该节点的数据更新时触发，previousChildKey为null。
   Stream<Event> get onValue => _observe(_EventType.value);
 
+  /*
+  如果assert的判断为true，则继续执行下面的语句，反之则会丢出异常。
+  如果Map包含给定的key，则containsKey方法返回true。
+  value必须是String、bool、double和int类型的一种类型。
+   */
   Query startAt(dynamic value, {String key}) {
     assert(!_parameters.containsKey('startAt'));
     assert(value is String || value is bool || value is double || value is int);
