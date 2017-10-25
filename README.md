@@ -31,7 +31,7 @@ Wilddog生成了一个App ID的字符串，这是Wilddog项目唯一ID，用于�
 
 ```
 dependencies:
-  wilddog_sync: "^0.0.1"
+  wilddog_sync: "^0.0.4"
 ```
 
 更新并保存此文件后，点击顶部的“Packages Get”，等待下载完成。打开`main.dart`文件，IntelliJ IDEA或其他编辑器可能会在上方显示一个提示，提醒我们重新加载`pubspec.yaml`文件，点击“Get dependencies”以检索其他软件包，并在Flutter项目中使用它们。
@@ -198,4 +198,146 @@ _counterRef.remove();
 
 ### 监听数据
 
-还没写完~~~
+#### 监听节点
+
+`onValue`方法会返回一个监听当前节点值的Stream，再将其添加至`StreamSubscription`实例中。这样每当节点的值发生更改时，应用程序都会收到更改后的值。需要注意的是，在应用程序结束时，要关闭所有的StreamSubscription实例。
+
+```
+StreamSubscription<Event> _counterSubscription;
+
+@override
+void initState() {
+  super.initState();
+  _counterSubscription = _counterRef.onValue.listen((Event event) {
+    print(event.snapshot.value);
+  });
+}
+
+@override
+void dispose() {
+  super.dispose();
+  _counterSubscription.cancel();
+}
+```
+
+#### 监听子节点
+
+监听子节点事件的方法有四种，分别是以下的方法。
+
+- onChildAdded：子节点加入时触发事件。
+- onChildRemoved：子节点被移除时触发事件。
+- onChildChanged：子节点改变时触发事件。
+- onChildMoved：子节点被移动时触发事件。
+
+以`onChildAdded`方法为例，当前节点下添加了一个子节点时，应用程序会立即收到刚刚添加的子节点数据。要注意的是，在这四个方法中，onChildAdded方法会返回所有的子节点数据。
+
+```
+StreamSubscription<Event> _messagesSubscription;
+
+@override
+void initState() {
+  super.initState();
+  _messagesSubscription = _messagesRef.onChildAdded.listen((Event event){
+    print('子节点增加了: ${event.snapshot.value}');
+  });
+}
+
+@override
+void dispose() {
+  super.dispose();
+  _messagesSubscription.cancel();
+}
+```
+
+#### 子节点排序
+
+将监听到的子节点排序有四种方法，分别是以下的方法。
+
+- orderByChild(String key)：生成按特定子key的value排序的数据视图。
+- orderByKey()：生成按Key排序的数据视图。
+- orderByValue()：生成按Value排序的数据视图。
+- orderByPriority()：生成按Priority排序的数据视图。
+
+以`orderByChild(String key)`方法为例，将所有子节点按特定子key的value排序，每当有新的子节点时，都会加入排序。
+
+```
+_messagesSubscription = _messagesRef.orderByChild("content").onChildAdded.listen((Event event){
+  print('子节点增加了: ${event.snapshot.value}');
+});
+```
+
+#### 有限的监听
+
+将监听到的子节点排序有两种方法，分别是以下的方法。
+
+- limitToFirst(int limit)：从开头开始有限制的监听子节点。
+- limitToLast(int limit)：从末尾（最新的子节点）开始有限制的监听子节点。
+
+以`limitToFirst(int limit)`方法为例，只监听从末尾开始的十个子节点。
+
+```
+_messagesSubscription = _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
+  print('子节点增加了: ${event.snapshot.value}');
+});
+```
+
+### 野狗动画列表
+
+`WilddogAnimatedList`控件是一个绑定到Wilddog查询的滚动容器。在当前查询的节点下插入或移除子节点，会产生动画效果，使用户体验更好。在当前查询的节点下修改子节点，WilddogAnimatedList控件也会实时更新数据。
+
+```
+// import 'package:wilddog_sync/ui/wilddog_animated_list.dart';
+// import 'dart:async';
+new WilddogAnimatedList(
+  query: _messagesRef,
+  sort: (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key),
+  itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+    return new SizeTransition(
+      sizeFactor: animation,
+      child: new Text("$index: ${snapshot.value}"),
+    );
+  },
+),
+```
+
+| 属性| 说明 | 参数类型|
+| ---------- | ---------- | ----------|
+| key | 全局密钥 | GlobalKey |
+| query | 用于填充列表的Wilddog查询 | SyncReference |
+| itemBuilder | 根据需要调用的构建列表项控件 | WilddogAnimatedListItemBuilder |
+| sort | 用于在排序列表时比较快照的方法（可选），默认值是按key对快照进行排序 | Comparator< DataSnapshot > |
+| defaultChild | 在query加载时显示的控件，默认为空的Container() | Widget |
+| scrollDirection | 滚动视图中滚动轴的方向，默认为Axis.vertical | Axis |
+| reverse | 滚动视图是否在阅读方向滚动，默认为false，即从左到右滚动、从上到下滚动 | bool |
+| controller | 用于控制滚动视图中滚动条位置的控制器对象 | ScrollController |
+| primary | 这是否是与父PrimaryScrollController关联的主滚动视图 | bool |
+| physics | 滚动视图应如何响应用户输入，默认为匹配平台约定 | ScrollPhysics |
+| shrinkWrap | scrollDirection中滚动视图的范围是否应由正在查看的内容确定，默认为false | bool |
+| padding |  插入子控件的空间量 | EdgeInsets |
+| duration | 插入和删除动画的持续时间，默认为300毫秒 | Duration |
+
+### 数据本地持久化
+
+数据本地持久化是针对移动网络稳定性差而开发的功能。默认情况下，Wilddog Sync的数据存储在内存中，一旦重启，内存数据将被清除。开启数据本地持久化功能，可以使设备重启后无需再同步云端，有助于节省流量和提升重启后的访问速度。
+
+`setPersistenceEnabled(bool enabled)`方法用于设置数据库持久性是否开启。必须在调用数据库引用方法之前设置此属性，并且每个应用程序只需要调用一次。
+
+```
+WilddogSync.instance.setPersistenceEnabled(true);
+```
+
+Wilddog Sync可以在查询数据前同步指定节点下的数据，并将数据存储到设备中，以此提升访问速度。通过在某个位置调用`keepSynced(true)`，即使没有为该位置附加任何监听器，该位置的数据也将自动下载并保持同步。
+
+```
+_counterRef.keepSynced(true);
+```
+
+### 其他功能
+
+未来会实现的~~~
+
+## 加入我们
+
+如果你也想使用Flutter开发一个开源项目，欢迎加入Flutter开荒团，让我们一起开发Flutter的荒漠！*（将你的GitHub账户名发到评论区或私信我，或者加入QQ群271733776联系我们，我会发送邀请邮件给你）*
+
+![GitHub组织图片](http://img.blog.csdn.net/20170916212515378?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaGVrYWl5b3U=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)

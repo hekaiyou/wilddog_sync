@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: new Center(
               child: new Text(
                 '按钮点击了 $_counter 次，\n\n'
-                    '统计包含了所有的设备。',
+                    '数据来源于所有设备。',
               ),
             ),
           ),

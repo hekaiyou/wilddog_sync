@@ -1,3 +1,9 @@
+## 0.0.4
+
+* Updated README.md
+* Added example app
+* Bug fixes to Query handling
+
 ## 0.0.3
 
 * Fix compilation error
