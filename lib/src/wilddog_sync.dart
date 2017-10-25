@@ -39,6 +39,18 @@ class WilddogSync {
   /// 获取WilddogSync根目录的一个SyncReference。
   SyncReference reference() => new SyncReference._(this, <String>[]);
 
+  /// 尝试将数据库持久性设置为[enabled]。
+  ///
+  /// 必须在调用数据库引用方法之前设置此属性，并且每个应用程序只需要调用一次。
+  /// 如果操作成功，则返回的[Future]将以`true`完成，
+  /// 如果不能设置持久性（因为已创建数据库引用），则返回`false`。
+  ///
+  /// WilddogSync客户端将缓存同步的数据，并跟踪您在应用程序运行时发起的所有写入。
+  /// 当网络连接恢复时，它可以无缝地处理间歇性网络连接并重新发送写入操作。
+  ///
+  /// 但是，默认情况下，您的写入操作和缓存数据仅存储在内存中，并在应用程序重新启动时丢失。
+  /// 通过将[enabled]设置为`true`，数据将被持久保存到设备（磁盘）存储中，
+  /// 并在应用重新启动时再次可用（即使当时没有网络连接）。
   Future<bool> setPersistenceEnabled(bool enabled) {
     return _channel.invokeMethod(
       'WilddogSync#setPersistenceEnabled',
@@ -46,10 +58,12 @@ class WilddogSync {
     );
   }
 
+  /// 在以前的[goOffline]调用之后，恢复与WilddogSync后端的连接。
   Future<Null> goOnline() {
     return _channel.invokeMethod('WilddogSync#goOnline');
   }
 
+  /// 关闭与WilddogSync后端的连接，直到[goOnline]被调用。
   Future<Null> goOffline() {
     return _channel.invokeMethod('WilddogSync#goOffline');
   }

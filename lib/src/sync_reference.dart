@@ -22,6 +22,8 @@ class SyncReference extends Query {
         (new List<String>.from(_pathComponents)..addAll(path.split('/'))));
   }
 
+  /// 获取父位置的SyncReference。
+  /// 如果此实例引用您的WilddogSync的根，它没有父，因此parent()将返回null。
   SyncReference parent() {
     if (_pathComponents.isEmpty) {
       return null;
@@ -30,10 +32,13 @@ class SyncReference extends Query {
         _database, (new List<String>.from(_pathComponents)..removeLast()));
   }
 
+  /// 获取根位置的WDGSyncReference。
   SyncReference root() {
     return new SyncReference._(_database, <String>[]);
   }
 
+  /// 获取WilddogSync位置中的最后一个令牌，
+  /// 例如https://SampleChat.firebaseIO-demo.com/users/fred中的fred’。
   String get key => _pathComponents.last;
 
   /// 使用唯一Key生成新的子节点并返回一个SyncReference。

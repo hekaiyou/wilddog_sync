@@ -127,19 +127,23 @@ class Query {
   /// 当该节点的数据更新时触发，previousChildKey为null。
   Stream<Event> get onValue => _observe(_EventType.value);
 
-  /*
-  如果assert的判断为true，则继续执行下面的语句，反之则会丢出异常。
-  如果Map包含给定的key，则containsKey方法返回true。
-  value必须是String、bool、double和int类型的一种类型。
-   */
+  /// 创建一个限制为仅使用大于或等于给定value的子节点返回的查询，
+  /// 使用给定的orderBy指令或优先级作为默认值，
+  /// 以及可选择仅包含key大于或等于给定key的子节点。
   Query startAt(dynamic value, {String key}) {
+    // 如果assert的判断为true，则继续执行下面的语句，反之则会丢出异常。
     assert(!_parameters.containsKey('startAt'));
+    // 如果Map包含给定的key，则containsKey方法返回true。
+    // value必须是String、bool、double和int类型的一种类型。
     assert(value is String || value is bool || value is double || value is int);
     final Map<String, dynamic> parameters = <String, dynamic>{'startAt': value};
     if (key != null) parameters['startAtKey'] = key;
     return _copyWithParameters(parameters);
   }
 
+  /// 创建一个限制为只返回小于或等于给定value的子节点的查询，
+  /// 使用给定的orderBy指令或优先级作为默认值，
+  /// 并且可选择仅包含key小于或等于给定key的子节点。
   Query endAt(dynamic value, {String key}) {
     assert(!_parameters.containsKey('endAt'));
     assert(value is String || value is bool || value is double || value is int);
@@ -148,6 +152,9 @@ class Query {
     return _copyWithParameters(parameters);
   }
 
+  /// 创建一个限制为只返回带有`value`和`key`的子节点的查询。
+  ///
+  /// 如果提供了一个key，最多只有一个这样的子节点，因为名字是唯一的。
   Query equalTo(dynamic value, {String key}) {
     assert(!_parameters.containsKey('equalTo'));
     assert(value is String || value is bool || value is double || value is int);
@@ -156,17 +163,21 @@ class Query {
     );
   }
 
+  /// 创建一个有限制的查询并将其锚定到窗口的开头。
   Query limitToFirst(int limit) {
     assert(!_parameters.containsKey('limitToFirst'));
     return _copyWithParameters(<String, dynamic>{'limitToFirst': limit});
   }
 
-  // 创建一个有限制的查询并将其锚定到窗口的末尾。
+  /// 创建一个有限制的查询并将其锚定到窗口的末尾。
   Query limitToLast(int limit) {
     assert(!_parameters.containsKey('limitToLast'));
     return _copyWithParameters(<String, dynamic>{'limitToLast': limit});
   }
 
+  /// 生成按特定子key的value排序的数据视图。
+  ///
+  /// 预期与[startAt]、[endAt]或[equalTo]组合使用。
   Query orderByChild(String key) {
     assert(key != null);
     assert(!_parameters.containsKey('orderBy'));
@@ -175,28 +186,37 @@ class Query {
     );
   }
 
+  /// 生成按Key排序的数据视图。
+  ///
+  /// 预期与[startAt]、[endAt]或[equalTo]组合使用。
   Query orderByKey() {
     assert(!_parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'key'});
   }
 
+  /// 生成按Value排序的数据视图。
+  ///
+  /// 预期与[startAt]、[endAt]或[equalTo]组合使用。
   Query orderByValue() {
     assert(!_parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'value'});
   }
 
+  /// 生成按Priority排序的数据视图。
+  ///
+  /// 预期与[startAt]、[endAt]或[equalTo]组合使用。
   Query orderByPriority() {
     assert(!_parameters.containsKey('orderBy'));
     return _copyWithParameters(<String, dynamic>{'orderBy': 'priority'});
   }
 
+  /// 获取对应于此查询的位置的SyncReference。
   SyncReference reference() =>
       new SyncReference._(_database, _pathComponents);
 
-  /*
-   * 通过在一个位置调用keepSynced(true)，这个位置将被自动下载并保持同步的数据，即使没有听众也一样。
-   * 此外，在一个位置保持同步，它将不会被驱逐出持续的磁盘高速缓存。
-   */
+  /// 通过在某个位置调用keepSynced(true)，即使没有为该位置附加任何监听器，
+  /// 该位置的数据也将自动下载并保持同步。
+  /// 另外，当一个位置被保持同步时，它不会从永久磁盘缓存中被逐出。
   Future<Null> keepSynced(bool value) {
     return _database._channel.invokeMethod(
       'Query#keepSynced',
