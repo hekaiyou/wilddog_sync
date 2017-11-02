@@ -25,6 +25,8 @@
 
 Wilddog生成了一个App ID的字符串，这是Wilddog项目唯一ID，用于连接到刚创建的Wilddog服务。复制这个ID字符串值，下面在Android、iOS平台上配置Wilddog时需要用到这个值。
 
+注意，新项目需要*开启实时通信引擎服务*才能正常使用，不然会报无权限异常。
+
 ### 将插件添加到应用程序
 
 将以下内容添加到的Flutter项目的`pubspec.yaml`文件中。
@@ -331,10 +333,6 @@ Wilddog Sync可以在查询数据前同步指定节点下的数据，并将数�
 ```
 _counterRef.keepSynced(true);
 ```
-
-### 其他功能
-
-未来会实现的~~~
 
 ## 加入我们
 

@@ -1,3 +1,8 @@
+## 0.0.5
+
+* Improved documentation
+* Improved example
+
 ## 0.0.4
 
 * Updated README.md
