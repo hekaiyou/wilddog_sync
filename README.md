@@ -333,9 +333,3 @@ Wilddog Sync可以在查询数据前同步指定节点下的数据，并将数�
 ```
 _counterRef.keepSynced(true);
 ```
-
-## 加入我们
-
-如果你也想使用Flutter开发一个开源项目，欢迎加入Flutter开荒团，让我们一起开发Flutter的荒漠！*（将你的GitHub账户名发到评论区或私信我，或者加入QQ群271733776联系我们，我会发送邀请邮件给你）*
-
-![GitHub组织图片](http://img.blog.csdn.net/20170916212515378?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaGVrYWl5b3U=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
