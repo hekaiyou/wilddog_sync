@@ -12,8 +12,8 @@ public class MainActivity extends FlutterActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    GeneratedPluginRegistrant.registerWith(this);
     WilddogOptions options = new WilddogOptions.Builder().setSyncUrl("https://wd7039035262bkoubk.wilddogio.com/").build();
     WilddogApp.initializeApp(this, options);
+    GeneratedPluginRegistrant.registerWith(this);
   }
 }
