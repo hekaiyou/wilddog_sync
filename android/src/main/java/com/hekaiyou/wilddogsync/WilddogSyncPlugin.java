@@ -427,7 +427,8 @@ public class WilddogSyncPlugin implements MethodCallHandler {
       case "SyncReference#update":
       {
         Map<String, Object> arguments = call.arguments();
-        Map value = (Map) arguments.get("value");
+        @SuppressWarnings("unchecked")
+        Map<String, Object> value = (Map<String, Object>) arguments.get("value");
         SyncReference reference = getReference(arguments);
         // updateChildren()方法用于更新指定子节点的值
         reference.updateChildren(value, new DefaultCompletionListener(result));
